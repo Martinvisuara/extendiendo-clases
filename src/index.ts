@@ -1,3 +1,6 @@
+import fs from "fs";
+import { remove } from "lodash";
+import { orderBy } from "lodash";
 class ListaDeCosas {
   name: string;
   cosas: any[] = [];
@@ -24,6 +27,35 @@ class Product {
   }
 }
 
-class ListaDeProductos extends ListaDeCosas {}
+class ListaDeProductos extends ListaDeCosas {
+  constructor(name: string) {
+    super(name);
+    const contenidoDelArchivo = fs
+      .readFileSync(__dirname + "/products.json")
+      .toString();
+    const productosDelArchivo = JSON.parse(contenidoDelArchivo);
+
+    productosDelArchivo.forEach((p) => {
+      this.addProduct(p);
+    });
+  }
+
+  addProduct(product: Product) {
+    this.add(product);
+  }
+  getProduct(id: number): Product {
+    const cosas = this.getCosas();
+    return cosas.find((c) => c.id == id);
+  }
+
+  removeProduct(id: number): void {
+    remove(this.cosas, (c) => c.id == id);
+  }
+
+  getSortedByPrice(order: "asc" | "desc"): Product[] {
+    // harcode | harcodeo
+    return orderBy(this.cosas, ["price"], [order]);
+  }
+}
 
 export { ListaDeProductos, Product };
