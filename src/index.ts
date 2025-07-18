@@ -41,8 +41,12 @@ class ListaDeProductos extends ListaDeCosas {
   }
 
   addProduct(product: Product) {
-    this.add(product);
+    const existe = this.getCosas().find((p) => p.id === product.id);
+    if (!existe) {
+      this.add(product);
+    }
   }
+
   getProduct(id: number): Product {
     const cosas = this.getCosas();
     return cosas.find((c) => c.id == id);
